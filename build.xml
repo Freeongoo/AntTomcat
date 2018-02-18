@@ -1,0 +1,45 @@
+<project name="ant_tomcat" default="all">
+    <property name="src" value="src"/>
+    <property name="web" value="web"/>
+    <property name="web.build.dir" value="${web}/WEB-INF"/>
+    <property name="web.build.dir.classes" value="${web.build.dir}/classes"/>
+    <property name="web.xml" value="${web.build.dir}/web.xml"/>
+    <property name="web.src.dir" value="${src}/main/java"/>
+    <property name="war.file" value="simple.war"/>
+
+    <path id="classpath.test">
+        <pathelement location="lib/junit-4.12.jar"/>
+        <pathelement location="lib/hamcrest-core-1.3.jar"/>
+        <pathelement location="${web.build.dir.classes}"/>
+    </path>
+
+    <path id="classpath.servlet">
+        <pathelement location="lib/servlet-api.jar"/>
+        <pathelement location="${web.build.dir.classes}"/>
+    </path>
+
+    <target name="compile">
+        <mkdir dir="${web.build.dir.classes}"/>
+        <javac srcdir="${web.src.dir}" destdir="${web.build.dir.classes}" includeantruntime="false" >
+            <classpath refid="classpath.servlet"/>
+        </javac>
+    </target>
+
+    <target name="war" depends="compile">
+        <war destfile="${war.file}" webxml="${web.xml}">
+            <fileset dir="${web}">
+                <include name="**/*.*"/>
+                <exclude name="${web.xml}" />
+            </fileset>
+            <classes dir="${web.build.dir.classes}"/>
+        </war>
+    </target>
+
+    <target name="all" depends="war">
+    </target>
+
+    <target name="clean" description="Clean classes dir and war file">
+        <delete dir="${web.build.dir.classes}"/>
+        <delete file="${war.file}"/>
+    </target>
+</project>

@@ -1,0 +1,4 @@
+.idea
+build
+web/WEB-INF/classes
+simple.war
