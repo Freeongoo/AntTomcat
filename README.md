@@ -1,15 +1,16 @@
 # Ant tomcat example
 
-## Getting Started
+## Init
 
 1. Install tomcat 7>
 2. Set roles for tomcat "tomcat-users.xml"
 3. Copy from "tomcat.properties.dist" to "tomcat.properties"
-    Unix:
     ```
     cp tomcat.properties.dist tomcat.properties
     ```
 4. Set config tomcat to "tomcat.properties"
+
+## Getting Started
 
 Compile
 
