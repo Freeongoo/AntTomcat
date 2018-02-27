@@ -2,6 +2,9 @@
 
 <project xmlns:ivy="antlib:org.apache.ivy.ant" name="ant_tomcat" default="all" basedir=".">
 
+    <!-- include tomcat info -->
+    <property file="tomcat.properties"/>
+
     <!-- ivy properties -->
     <property name="ivy.install.version" value="2.4.0" />
     <condition property="ivy.home" value="${env.IVY_HOME}">
@@ -20,6 +23,36 @@
     <property name="web.src.dir" value="${src}/main/java"/>
     <property name="war.file" value="simple.war"/>
     <property name="lib" value="lib"/>
+
+    <!-- tomcat properties -->
+    <property name="tomcat.context" value="${context}" />
+    <property name="tomcat.home.dir" location="${catalina.home}" />
+    <property name="tomcat.base.url" value="${base.url}" />
+    <property name="tomcat.manager.url" value="${manager.url}" />
+    <property name="tomcat.user.name" value="${manager.username}" />
+    <property name="tomcat.user.password" value="${manager.password}" />
+
+    <path id="tomcat.classpath">
+        <!-- We need the Catalina jars for Tomcat -->
+        <fileset dir="${tomcat.home.dir}/lib">
+            <include name="catalina-ant.jar"/>
+            <include name="tomcat-coyote.jar"/>
+            <include name="tomcat-util.jar"/>
+        </fileset>
+        <fileset dir="${tomcat.home.dir}/bin">
+            <include name="tomcat-juli.jar"/>
+        </fileset>
+    </path>
+
+    <!-- Configure the custom Ant tasks for the Manager application -->
+    <taskdef name="deploy"    classname="org.apache.catalina.ant.DeployTask" classpathref="tomcat.classpath"/>
+    <taskdef name="list"      classname="org.apache.catalina.ant.ListTask" classpathref="tomcat.classpath"/>
+    <taskdef name="reload"    classname="org.apache.catalina.ant.ReloadTask" classpathref="tomcat.classpath"/>
+    <taskdef name="findleaks" classname="org.apache.catalina.ant.FindLeaksTask" classpathref="tomcat.classpath"/>
+    <taskdef name="resources" classname="org.apache.catalina.ant.ResourcesTask" classpathref="tomcat.classpath"/>
+    <taskdef name="start"     classname="org.apache.catalina.ant.StartTask" classpathref="tomcat.classpath"/>
+    <taskdef name="stop"      classname="org.apache.catalina.ant.StopTask" classpathref="tomcat.classpath"/>
+    <taskdef name="undeploy"  classname="org.apache.catalina.ant.UndeployTask" classpathref="tomcat.classpath"/>
 
     <path id="classpath.test">
         <pathelement location="${lib}/junit-4.12.jar"/>
@@ -83,6 +116,28 @@
     </target>
 
     <target name="all" depends="war">
+    </target>
+
+    <target name="undeploy">
+        <!-- TOMCAT undeploy-->
+        <undeploy
+                url="${tomcat.manager.url}"
+                username="${tomcat.user.name}"
+                password="${tomcat.user.password}"
+                path="/${tomcat.context}"
+        />
+    </target>
+
+    <target name="deploy" depends="clean, war">
+        <!-- TOMCAT deploy-->
+        <deploy
+                url="${tomcat.manager.url}"
+                username="${tomcat.user.name}"
+                password="${tomcat.user.password}"
+                path="/${tomcat.context}"
+                localWar="file:${basedir}/${war.file}"
+                update="true"
+        />
     </target>
 
     <target name="clean" description="Clean classes dir and war file">
