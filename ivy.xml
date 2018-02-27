@@ -1,0 +1,14 @@
+<ivy-module version="2.0">
+    <info organisation="org.apache" module="ant_tomcat" />
+
+    <configurations>
+        <conf name="compile" description="Required to compile application"/>
+        <conf name="runtime" description="Additional run-time dependencies" extends="compile"/>
+        <conf name="test"    description="Required for test only" extends="runtime"/>
+    </configurations>
+
+    <dependencies>
+        <dependency org="javax.servlet" name="javax.servlet-api" rev="3.0.1" conf="compile->default" />
+        <dependency org="junit" name="junit" rev="4.12" conf="test->default" />
+    </dependencies>
+</ivy-module>

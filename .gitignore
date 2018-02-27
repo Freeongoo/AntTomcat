@@ -1,4 +1,5 @@
 build
+lib
 web/WEB-INF/classes
 simple.war
 
