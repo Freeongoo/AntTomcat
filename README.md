@@ -1,6 +1,6 @@
 # Ant tomcat example
 
-## Init
+## Initialise
 
 1. Install tomcat 7>
 2. Set roles for tomcat "tomcat-users.xml"
